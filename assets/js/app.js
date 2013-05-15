@@ -1,10 +1,25 @@
 // this global variable is where all the script goes so that
 // it doesn't polute the global namespace
 var MYAPP = MYAPP || {};
-
+		var alarmTriggered = false;
+		function pulseVibrate() {
+		for(var i=0;i<3;i++){
+			setTimeout(function() {navigator.notification.vibrate(500);}, 1250*i);
+		}	}		
+		function updateClock() {
+			var now = moment();
+			var alarm = moment("2013-05-07 05:14:30 PM", "YYYY-MM-DD HH:mm:ss A");
+			$('#time').html(now.format("h:mm:ss A"));
+			if(alarm.diff(now)<500 && !alarmTriggered){
+				alarmTriggered = true;
+				alert("beep beep!");
+				pulseVibrate();				
+			}
+		}
 MYAPP.run = (function() {
 	// create the Kendo UI Mobile application
     MYAPP.app = new kendo.mobile.Application(document.body, { transition: "slide" }); 
+setInterval(updateClock, 1000); //updates the clock every second
 });
 
 // this is called when the intial view shows. it prevents the flash
